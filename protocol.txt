@@ -1,0 +1,8 @@
+The IR Remote and IR Receiver are using a proprietary infrared communication protocol.
+ It's not I2C, SPI, or UART. The IRremote library handles the details of encoding and decoding the IR signals.
+The Adafruit 7-Segment Display is using I2C to communicate with the Arduino.
+
+
+i2C - 7 segment display communicate with arduino
+SDA (Serial Data): Carries the actual data being transmitted.
+SCL (Serial Clock): Carries the clock signal that synchronizes the data transfer between devices.

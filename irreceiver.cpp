@@ -12,6 +12,12 @@ int button = 0;
 // Create an object for the 7-segment LED display
 Adafruit_7segment led_display1 = Adafruit_7segment();
 
+// Variable to store the combined display value
+String displayValue = "";
+
+// Maximum length of the display value
+const int MAX_DISPLAY_LENGTH = 4;
+
 // Map the IR code to the corresponding remote button.
 // The buttons are in this order on the remote:
 //    0   1   2
@@ -58,6 +64,34 @@ int readInfrared() {
   return result; // Return the button number or -1 if no button was pressed
 }
 
+// Function to convert button number to letter
+char buttonToLetter(int button) {
+  switch (button) {
+    case 0: return 'A';
+    case 1: return 'B';
+    case 2: return 'C';
+    case 4: return 'D';
+    case 5: return 'E';
+    case 6: return 'F';
+    case 8: return 'G';
+    case 9: return 'H';
+    case 10: return 'I';
+    case 12: return 'J';
+    case 13: return 'K';
+    case 14: return 'L';
+    case 16: return 'M';
+    case 17: return 'N';
+    case 18: return 'O';
+    case 20: return 'P';
+    case 21: return 'Q';
+    case 22: return 'R';
+    case 24: return 'S';
+    case 25: return 'T';
+    case 26: return 'U';
+    default: return '?'; // Unknown character
+  }
+}
+
 // Setup function (runs once at the beginning)
 void setup()
 {
@@ -82,15 +116,24 @@ void loop()
   button = readInfrared();
   // Check if a valid button was pressed (button number is 0 or greater)
   if (button >= 0) {
-    // Display the button number on the 7-segment display
-    led_display1.println(button);
+    // Convert the button number to a letter
+    char letter = buttonToLetter(button);
+
+    // Append the new letter to the display value
+    displayValue += letter;
+
+    // Limit the length of the display value to MAX_DISPLAY_LENGTH
+    if (displayValue.length() > MAX_DISPLAY_LENGTH) {
+      displayValue = displayValue.substring(displayValue.length() - MAX_DISPLAY_LENGTH);
+    }
+
+    // Display the combined value on the 7-segment display
+    led_display1.println(displayValue);
     led_display1.writeDisplay();
 
-
-    
     // Print the button number to the serial monitor
     Serial.print("Button pressed: ");
-    Serial.println(button);
+    Serial.println(letter);
   }
   // Delay a little bit to improve simulation performance
   delay(10);
