@@ -1,0 +1,14 @@
+
+-breadboard
++,- connected to correct wire
+
+resistor,capacitor
+
+
+-wire
+power connect + and 
+ground connect - cathod
+
+
+-process
+decode - send hexa
