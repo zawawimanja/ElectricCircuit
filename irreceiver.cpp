@@ -61,6 +61,10 @@ int readInfrared() {
 // Setup function (runs once at the beginning)
 void setup()
 {
+  Serial.begin(9600);
+  // initializes serial communication with a specific baud rate (9600 in this case
+  Serial.println("Hello, Serial Monitor!");
+
   // Initialize the 7-segment LED display with the I2C address 112
   led_display1.begin(112);
   // Initialize the IR receiver on pin 2
@@ -81,6 +85,12 @@ void loop()
     // Display the button number on the 7-segment display
     led_display1.println(button);
     led_display1.writeDisplay();
+
+
+    
+    // Print the button number to the serial monitor
+    Serial.print("Button pressed: ");
+    Serial.println(button);
   }
   // Delay a little bit to improve simulation performance
   delay(10);
