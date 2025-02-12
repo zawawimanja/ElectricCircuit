@@ -1,11 +1,15 @@
 // C++ code
-//
+
+// Include the library for the Adafruit LED Backpack (7-segment display)
 #include "Adafruit_LEDBackpack.h"
 
+// Include the IRremote library for infrared communication
 #include <IRremote.h>
 
+// Global variable to store the button number
 int button = 0;
 
+// Create an object for the 7-segment LED display
 Adafruit_7segment led_display1 = Adafruit_7segment();
 
 // Map the IR code to the corresponding remote button.
@@ -30,7 +34,6 @@ int mapCodeToButton(unsigned long code) {
   // Check for codes from this specific remote
   if ((code & 0x0000FFFF) == 0x0000BF00) {
     // No longer need the lower 16 bits. Shift the code by 16
-    // to make the rest easier.
     code >>= 16;
     // Check that the value and inverse bytes are complementary.
     if (((code >> 8) ^ (code & 0x00FF)) == 0x00FF) {
@@ -40,8 +43,9 @@ int mapCodeToButton(unsigned long code) {
   return -1;
 }
 
+// Function to read the infrared signal
 int readInfrared() {
-  int result = -1;
+  int result = -1; // Initialize the result to -1 (no button pressed)
   // Check if we've received a new code
   if (IrReceiver.decode()) {
     // Get the infrared code
@@ -51,25 +55,33 @@ int readInfrared() {
     // Enable receiving of the next value
     IrReceiver.resume();
   }
-  return result;
+  return result; // Return the button number or -1 if no button was pressed
 }
 
+// Setup function (runs once at the beginning)
 void setup()
 {
+  // Initialize the 7-segment LED display with the I2C address 112
   led_display1.begin(112);
+  // Initialize the IR receiver on pin 2
   IrReceiver.begin(2);
 
-
+  // Display "----" on the 7-segment display during initialization
   led_display1.println("----");
   led_display1.writeDisplay();
 }
 
+// Loop function (runs continuously)
 void loop()
 {
+  // Read the infrared signal and get the button number
   button = readInfrared();
+  // Check if a valid button was pressed (button number is 0 or greater)
   if (button >= 0) {
+    // Display the button number on the 7-segment display
     led_display1.println(button);
     led_display1.writeDisplay();
   }
-  delay(10); // Delay a little bit to improve simulation performance
+  // Delay a little bit to improve simulation performance
+  delay(10);
 }
